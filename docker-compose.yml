@@ -1,6 +1,9 @@
 version: "3.7"
 services:
-  $$IMAGE_NAME$$:
+  opensmtpd:
     build: .
-    image: homecentr/$$IMAGE_NAME$$
-    restart: unless-stopped
+    image: homecentr/opensmtpd-relay  
+    ports:
+      - "2525:25/tcp"
+    volumes:
+      - "./example:/config"
