@@ -41,6 +41,4 @@ services:
 The container is regularly scanned for vulnerabilities and updated. Further info can be found in the [Security tab](https://github.com/homecentr/docker-opensmtpd/security).
 
 ### Container user
-The container supports privilege drop. Even though the container starts as root, it will use the permissions only to perform the initial set up. The opensmtpd process runs as UID/GID provided in the PUID and PGID environment variables.
-
-:warning: Do not change the container user directly using the `user` Docker compose property or using the `--user` argument. This would break the privilege drop logic.
+The container does NOT support privilege drop due to the internal code of OpenSMTP which explicitly checks for UID and fails unless it's 0. 
