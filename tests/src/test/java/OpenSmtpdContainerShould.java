@@ -20,6 +20,8 @@ import javax.mail.internet.MimeMessage;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+import static org.junit.Assert.assertEquals;
+
 public class OpenSmtpdContainerShould {
     private static final Logger logger = LoggerFactory.getLogger(OpenSmtpdContainerShould.class);
 
@@ -30,6 +32,8 @@ public class OpenSmtpdContainerShould {
         _container = new GenericContainerEx<>(new DockerImageTagResolver())
                 .withRelativeFileSystemBind(Paths.get( "src", "test", "resources", "smtpd.conf"), "/config/smtpd.conf")
                 .withRelativeFileSystemBind(Paths.get( "src", "test", "resources", "users"), "/config/users")
+                .withEnv("PGID", "7011")
+                .withEnv("PUID", "7012")
                 .withExposedPorts(25)
                 .waitingFor(WaitEx.forS6OverlayStart());
 
@@ -63,5 +67,19 @@ public class OpenSmtpdContainerShould {
         message.setText("Hello, world!");
 
         Transport.send(message);
+    }
+
+    @Test
+    public void startSmtpdProcessWithPuid() throws Exception {
+        Integer uid = _container.getProcessUid("smtpd");
+
+        assertEquals(7012, (long)uid);
+    }
+
+    @Test
+    public void startSmtpdProcessWithPgid() throws Exception {
+        Integer gid = _container.getProcessGid("smtpd");
+
+        assertEquals(7011, (long)gid);
     }
 }
