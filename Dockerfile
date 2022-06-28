@@ -1,4 +1,4 @@
-FROM homecentr/base:3.4.1-alpine
+FROM homecentr/base:3.4.2-alpine
 
 RUN apk add --no-cache \
     opensmtpd=6.8.0p2-r4
